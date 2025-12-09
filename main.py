@@ -1,13 +1,15 @@
 from fastapi import FastAPI
+from app.api.v1.endpoints import items
+from app.db.session import engine, Base
 
-app = FastAPI()
+# Create tables (use Alembic for production migrations instead)
+Base.metadata.create_all(bind=engine)
 
+app = FastAPI(title="FastAPI CRUD Project")
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+# Include Router
+app.include_router(items.router, prefix="/api/v1/items", tags=["Items"])
 
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+@app.get("/hello")
+def root():
+    return {"message": "Server is running"}
