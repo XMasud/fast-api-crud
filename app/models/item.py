@@ -1,5 +1,8 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from datetime import datetime, timezone
+
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from app.db.session import Base
+
 
 class Item(Base):
     __tablename__ = "items"
@@ -8,3 +11,4 @@ class Item(Base):
     title = Column(String, index=True)
     description = Column(String, index=True)
     is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.now(timezone.utc))

@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from datetime import datetime
+
 
 # Shared properties
 class ItemBase(BaseModel):
@@ -11,9 +13,16 @@ class ItemCreate(ItemBase):
     pass
 
 # Properties to return to client (includes ID)
-class ItemResponse(ItemBase):
+class ItemResponse(BaseModel):
     id: int
-    is_active: bool
+    title: str
+    description: str
+    is_active: bool = True
+    created_at: datetime
 
-    class Config:
-        from_attributes = True # Important for ORM compatibility
+    model_config = {
+        "from_attributes": True,
+        "json_encoders": {
+            datetime: lambda v: v.strftime("%Y-%m-%d %H:%M:%S")
+        }
+    }
